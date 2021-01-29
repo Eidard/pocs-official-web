@@ -1,0 +1,26 @@
+{
+  "sourceType": "unambiguous",
+  "presets": [
+    [
+      "@babel/preset-env",
+      {
+        "modules": false,
+        "targets": "> 0.25%, not dead"
+      }
+    ],
+    ["@babel/preset-react"]
+  ],
+  "plugins": [
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "absoluteRuntime": false,
+        "corejs": 3,
+        "helpers": true,
+        "regenerator": true,
+        "useESModules": true,
+        "version": "^7.12.5"
+      }
+    ]
+  ]
+}
