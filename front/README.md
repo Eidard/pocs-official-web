@@ -10,18 +10,18 @@ Front-end of the [POCS official web](http://ipocs.org/).
 npm install
 ```
 
-# Launch development server
+### Launch development server
 
 ```
 npm run run:dev
 ```
 
-# Build
+### Build
 
 ```
 npm run build
 ```
 
-# Deployment
+### Deployment
 
 Planned
