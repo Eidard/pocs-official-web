@@ -36,7 +36,7 @@ const Label = styled.label`
   flex-basis: auto;
   flex-grow: 0;
   flex-shrink: 0;
-  width: 4em;
+  width: 7em;
   font-size: 18px;
 `;
 const Input = styled.input`
@@ -77,11 +77,15 @@ export default withRouter(function Register(props) {
       <RowWrapper>
         <Row>
           <Label htmlFor="email">이메일</Label>
-          <Input id="email" type="text"></Input>
+          <Input id="email" type="email"></Input>
         </Row>
         <Row>
           <Label htmlFor="password">패스워드</Label>
-          <Input id="password" type="pasword"></Input>
+          <Input id="password" type="password"></Input>
+        </Row>
+        <Row>
+          <Label htmlFor="password">패스워드 확인</Label>
+          <Input id="passwordConfirm" type="password"></Input>
         </Row>
         <SubmitButton type="button" onClick={handleClickSubmit}>
           회원 가입 신청
