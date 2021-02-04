@@ -6,6 +6,7 @@ const Wrapper = styled.main`
   margin:           0px;
   background-color: #eee;
   height:           100%;
+  text-align:       center;
 `;
 
 const Header = styled.header`
@@ -79,9 +80,10 @@ const HeaderContentText = styled.p`
 `
 
 const Section = styled.section`
-  margin:           20px 40px 20px 40px;
+  margin:           10px 20px 10px 20px;
   padding:          10px;
   background-color: white;
+  text-align:       left;
 `
 
 const Article = styled.article`
