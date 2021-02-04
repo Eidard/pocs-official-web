@@ -12,7 +12,7 @@ const Header = styled.header`
   display:          inline-block;
   width:            100%;
   height:           300px;
-  background-color: darkblue;
+  background-color: #333;
 `;
 
 const HeaderContent = styled.div`
@@ -99,6 +99,7 @@ const ArticleRowWrapper = styled.div`
 `
 
 const ArticleRowTitle = styled.span`
+  display:          inline-block;
   font-weight:      bold;
   margin:           5px 5px 0px 0px;
   font-size:        14px;
@@ -155,18 +156,17 @@ export default withRouter(function Board(props) {
           </NavigationBarList>
         </NavigationBarRoot>
         <HeaderContent>
-          <HeaderContentTitle>POCS Official</HeaderContentTitle>
-          <HeaderContentText>Pioneer Of Computer Science</HeaderContentText>
+          <HeaderContentTitle>Board 1</HeaderContentTitle>
+          <HeaderContentText>테스트를 위한 보드 1 입니다.</HeaderContentText>
         </HeaderContent>
       </Header>
       <Section>
         <Article>
           <ArticleTitle>최근 게시글</ArticleTitle>
-          <ArticleRow title="Title 1" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 2" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 3" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 4" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 5" date="2021.02.04" to="post"/>
+          <ArticleRow
+            title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+            date="2021.02.04" to="post"
+          />
         </Article>
       </Section>
     </Wrapper>

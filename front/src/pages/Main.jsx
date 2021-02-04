@@ -149,6 +149,14 @@ const SearchButton = () => {
   return <NavigationBarImageItem src="/images/main/search.png"/>
 }
 
+const ArticleTitleButton = (props) => {
+  return(
+    <Link to={ props.to } style={{ textDecoration: 'none', color: 'black' }}>
+      <ArticleTitle>{ props.text }</ArticleTitle>
+    </Link>
+  );
+}
+
 const ArticleRow = (props) => {
   return(
     <Link to={ props.to } style={{ textDecoration: 'none', color: 'black' }}>
@@ -192,12 +200,11 @@ export default withRouter(function Main(props) {
       <NoticeBar text="Placeholder" date="2021.02.04"/>
       <Section>
         <Article>
-          <ArticleTitle>Board 1</ArticleTitle>
-          <ArticleRow title="Title 1" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 2" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 3" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 4" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 5" date="2021.02.04" to="post"/>
+          <ArticleTitleButton text="Board 1" to="board"/>
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
         </Article>
       </Section>
     </Wrapper>
