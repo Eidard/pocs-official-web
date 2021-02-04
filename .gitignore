@@ -157,8 +157,6 @@ fabric.properties
 !.vscode/extensions.json
 *.code-workspace
 
-### venv ###
-.venv/*
 
 
 ### Windows ###
@@ -190,3 +188,5 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/linux,macos,windows,vscode,pycharm
 
 .vscode/
+
+venv/
