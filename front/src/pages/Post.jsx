@@ -81,7 +81,7 @@ const HeaderContentDate = styled.p`
 `
 
 const Section = styled.section`
-  margin:           40px 80px 40px 80px;
+  margin:           40px 80px 60px 80px;
   background-color: white;
 `
 
