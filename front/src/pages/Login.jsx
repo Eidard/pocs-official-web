@@ -36,7 +36,7 @@ const Label = styled.label`
   flex-basis: auto;
   flex-grow: 0;
   flex-shrink: 0;
-  width: 4em;
+  width: 5em;
   font-size: 18px;
 `;
 const Input = styled.input`
@@ -73,11 +73,11 @@ export default withRouter(function Login(props) {
       <RowWrapper>
         <Row>
           <Label htmlFor="email">이메일</Label>
-          <Input id="email" type="text"></Input>
+          <Input id="email" type="email"></Input>
         </Row>
         <Row>
           <Label htmlFor="password">패스워드</Label>
-          <Input id="password" type="pasword"></Input>
+          <Input id="password" type="password"></Input>
         </Row>
         <LoginButton type="button" onClick={handleClickLogin}>
           로그인
