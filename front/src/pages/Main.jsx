@@ -20,7 +20,10 @@ const HeaderContent = styled.div`
   text-align:       left;
   font-size:        24px;
   color:            white;
-  padding-left:     80px;
+  max-width:        1400px;
+  margin:           auto;
+  padding-left:     40px;
+  padding-right:     40px;
   padding-top:      120px;
 `
 
@@ -80,14 +83,18 @@ const HeaderContentText = styled.p`
 `
 
 const Section = styled.section`
-  margin:           10px 20px 10px 20px;
-  padding:          10px;
+  margin:           auto;
+  max-width:        1400px;
   background-color: white;
-  text-align:       left;
+  text-align:       center;
 `
 
 const Article = styled.article`
   margin:           10px 10px 10px 10px;
+  padding:          20px;
+  width:            600px;
+  display:          inline-block;
+  text-align:       left;
 `
 
 const ArticleTitle = styled.h1`
@@ -112,6 +119,15 @@ const ArticleRowText = styled.span`
 const ArticleRowDate = styled.span`
   float:            right;
   font-size:        14px;
+`
+
+const NoticeBarArticle = styled.article`
+  margin:           auto;
+  margin-top:       20px;
+  margin-bottom:    20px;
+  padding:          20px;
+  max-width:        1200px;
+  text-align:       left;
 `
 
 const NoticeBarTitle = styled.span`
@@ -172,12 +188,12 @@ const ArticleRow = (props) => {
 
 const NoticeBar = (props) => {
   return(
-    <Section>
-      <Article>
-        <NoticeBarTitle>공지사항</NoticeBarTitle>
-        <NoticeBarText>{ props.text }</NoticeBarText>
-        <NoticeBarDate>{ props.date }</NoticeBarDate>
-      </Article>
+  <Section>
+    <NoticeBarArticle>
+      <NoticeBarTitle>공지사항</NoticeBarTitle>
+      <NoticeBarText>{ props.text }</NoticeBarText>
+      <NoticeBarDate>{ props.date }</NoticeBarDate>
+    </NoticeBarArticle>
   </Section>
   );
 }
@@ -203,6 +219,91 @@ export default withRouter(function Main(props) {
       <Section>
         <Article>
           <ArticleTitleButton text="Board 1" to="board"/>
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+        </Article>
+        <Article>
+          <ArticleTitleButton text="Board 2" to="board"/>
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+        </Article>
+        <Article>
+          <ArticleTitleButton text="Board 3" to="board"/>
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+        </Article>
+        <Article>
+          <ArticleTitleButton text="Board 4" to="board"/>
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
+          <ArticleRow
+          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+          date="2021.02.04" to="post"
+          />
           <ArticleRow
           title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
           date="2021.02.04" to="post"
