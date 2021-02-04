@@ -83,7 +83,7 @@ const Section = styled.section`
 `
 
 const Article = styled.article`
-  margin:           20px;
+  margin:           5px;
 `
 
 const ArticleTitle = styled.h1`
