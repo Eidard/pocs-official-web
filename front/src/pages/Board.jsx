@@ -79,50 +79,32 @@ const HeaderContentText = styled.p`
 `
 
 const Section = styled.section`
-  margin:           20px 40px 20px 40px;
-  padding:          10px;
-  background-color: white;
+  margin:           40px 10px 10px 10px;
 `
 
 const Article = styled.article`
-  margin:           10px 10px 10px 10px;
+  margin:           20px;
 `
 
 const ArticleTitle = styled.h1`
   font-size:        16px;
-  margin-bottom:    20px;
+  margin:           30px 40px 30px 40px;
 `
 
 const ArticleRowWrapper = styled.div`
-  margin-bottom:    5px;
+  margin:           10px 40px 10px 40px;
+  padding:          10px;
+  background-color: white;
+  text-decoration:  none;
 `
 
 const ArticleRowTitle = styled.span`
-  margin:           5px 5px 0px 0px;
-  font-size:        14px;
-`
-
-const ArticleRowText = styled.span`
+  font-weight:      bold;
   margin:           5px 5px 0px 0px;
   font-size:        14px;
 `
 
 const ArticleRowDate = styled.span`
-  float:            right;
-  font-size:        14px;
-`
-
-const NoticeBarTitle = styled.span`
-  font-weight:      bold;
-  margin-right:     10px;
-  font-size:        16px;
-`
-
-const NoticeBarText = styled.span`
-  font-size:        14px;
-`
-
-const NoticeBarDate = styled.span`
   float:            right;
   font-size:        14px;
 `
@@ -160,19 +142,7 @@ const ArticleRow = (props) => {
   );
 }
 
-const NoticeBar = (props) => {
-  return(
-    <Section>
-      <Article>
-        <NoticeBarTitle>공지사항</NoticeBarTitle>
-        <NoticeBarText>{ props.text }</NoticeBarText>
-        <NoticeBarDate>{ props.date }</NoticeBarDate>
-      </Article>
-  </Section>
-  );
-}
-
-export default withRouter(function Main(props) {
+export default withRouter(function Board(props) {
   return (
     <Wrapper>
       <Header>
@@ -189,10 +159,9 @@ export default withRouter(function Main(props) {
           <HeaderContentText>Pioneer Of Computer Science</HeaderContentText>
         </HeaderContent>
       </Header>
-      <NoticeBar text="Placeholder" date="2021.02.04"/>
       <Section>
         <Article>
-          <ArticleTitle>Board 1</ArticleTitle>
+          <ArticleTitle>최근 게시글</ArticleTitle>
           <ArticleRow title="Title 1" date="2021.02.04" to="post"/>
           <ArticleRow title="Title 2" date="2021.02.04" to="post"/>
           <ArticleRow title="Title 3" date="2021.02.04" to="post"/>

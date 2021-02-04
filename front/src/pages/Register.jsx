@@ -10,19 +10,23 @@ const Wrapper = styled.main`
   padding: 12px;
   height: 100%;
 `;
+
 const Title = styled.h1`
   font-size: 24px;
   font-weight: normal;
 `;
+
 const SubTitle = styled.p`
   margin-top: 16px;
   font-size: 16px;
   font-weight: normal;
   color: #666666;
 `;
+
 const RowWrapper = styled.div`
   padding: 24px 0 32px;
 `;
+
 const Row = styled.div`
   display: flex;
   flex-direction: row;
@@ -32,6 +36,7 @@ const Row = styled.div`
     margin-top: 12px;
   }
 `;
+
 const Label = styled.label`
   flex-basis: auto;
   flex-grow: 0;
@@ -39,6 +44,7 @@ const Label = styled.label`
   width: 7em;
   font-size: 18px;
 `;
+
 const Input = styled.input`
   flex-basis: auto;
   flex-grow: 1;
@@ -48,6 +54,7 @@ const Input = styled.input`
   font-size: 18px;
   font-weight: normal;
 `;
+
 const SubmitButton = styled.button`
   display: block;
   margin: 36px auto 0;
@@ -55,6 +62,7 @@ const SubmitButton = styled.button`
   height: 2.5em;
   font-size: 14px;
 `;
+
 const SubText = styled.p`
   font-size: 14px;
   font-weight: normal;

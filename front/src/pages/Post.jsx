@@ -4,15 +4,15 @@ import styled             from 'styled-components';
 
 const Wrapper = styled.main`
   margin:           0px;
-  background-color: #eee;
+  background-color: white;
   height:           100%;
 `;
 
 const Header = styled.header`
   display:          inline-block;
   width:            100%;
-  height:           300px;
-  background-color: darkblue;
+  min-height:       300px;
+  background-color: Black;
 `;
 
 const HeaderContent = styled.div`
@@ -20,7 +20,8 @@ const HeaderContent = styled.div`
   font-size:        24px;
   color:            white;
   padding-left:     80px;
-  padding-top:      120px;
+  padding-right:    80px;
+  padding-top:      100px;
 `
 
 const LogoText = styled.div`
@@ -70,61 +71,22 @@ const NavigationBarImageItem = styled.img`
 const HeaderContentTitle = styled.p`
   font-size:        40px;
   font-weight:      bold;
-  margin-bottom:    10px;
+  margin-bottom:    30px;
 `
 
-const HeaderContentText = styled.p`
+const HeaderContentDate = styled.p`
   font-size:        16px;
   color:            lightgray;
+  margin-bottom:    40px;
 `
 
 const Section = styled.section`
-  margin:           20px 40px 20px 40px;
-  padding:          10px;
+  margin:           40px 80px 40px 80px;
   background-color: white;
 `
 
 const Article = styled.article`
-  margin:           10px 10px 10px 10px;
-`
-
-const ArticleTitle = styled.h1`
-  font-size:        16px;
-  margin-bottom:    20px;
-`
-
-const ArticleRowWrapper = styled.div`
-  margin-bottom:    5px;
-`
-
-const ArticleRowTitle = styled.span`
-  margin:           5px 5px 0px 0px;
-  font-size:        14px;
-`
-
-const ArticleRowText = styled.span`
-  margin:           5px 5px 0px 0px;
-  font-size:        14px;
-`
-
-const ArticleRowDate = styled.span`
-  float:            right;
-  font-size:        14px;
-`
-
-const NoticeBarTitle = styled.span`
-  font-weight:      bold;
-  margin-right:     10px;
-  font-size:        16px;
-`
-
-const NoticeBarText = styled.span`
-  font-size:        14px;
-`
-
-const NoticeBarDate = styled.span`
-  float:            right;
-  font-size:        14px;
+  margin:           0px;
 `
 
 const Logo = (props) => {
@@ -149,30 +111,7 @@ const SearchButton = () => {
   return <NavigationBarImageItem src="/images/main/search.png"/>
 }
 
-const ArticleRow = (props) => {
-  return(
-    <Link to={ props.to } style={{ textDecoration: 'none', color: 'black' }}>
-      <ArticleRowWrapper>
-        <ArticleRowTitle>{ props.title }</ArticleRowTitle>
-        <ArticleRowDate>{ props.date }</ArticleRowDate>
-      </ArticleRowWrapper>
-    </Link>
-  );
-}
-
-const NoticeBar = (props) => {
-  return(
-    <Section>
-      <Article>
-        <NoticeBarTitle>공지사항</NoticeBarTitle>
-        <NoticeBarText>{ props.text }</NoticeBarText>
-        <NoticeBarDate>{ props.date }</NoticeBarDate>
-      </Article>
-  </Section>
-  );
-}
-
-export default withRouter(function Main(props) {
+export default withRouter(function Post(props) {
   return (
     <Wrapper>
       <Header>
@@ -185,19 +124,17 @@ export default withRouter(function Main(props) {
           </NavigationBarList>
         </NavigationBarRoot>
         <HeaderContent>
-          <HeaderContentTitle>POCS Official</HeaderContentTitle>
-          <HeaderContentText>Pioneer Of Computer Science</HeaderContentText>
+          <HeaderContentTitle>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+          </HeaderContentTitle>
+          <HeaderContentDate>2020.02.04</HeaderContentDate>
         </HeaderContent>
       </Header>
-      <NoticeBar text="Placeholder" date="2021.02.04"/>
       <Section>
         <Article>
-          <ArticleTitle>Board 1</ArticleTitle>
-          <ArticleRow title="Title 1" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 2" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 3" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 4" date="2021.02.04" to="post"/>
-          <ArticleRow title="Title 5" date="2021.02.04" to="post"/>
+          <p>
+            Placeholder for Markdown
+          </p>
         </Article>
       </Section>
     </Wrapper>
