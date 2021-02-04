@@ -12,16 +12,21 @@ const Header = styled.header`
   display:          inline-block;
   width:            100%;
   min-height:       300px;
-  background-color: Black;
+  background-color: black;
 `;
 
 const HeaderContent = styled.div`
   text-align:       left;
   font-size:        24px;
   color:            white;
-  padding-left:     80px;
-  padding-right:    80px;
+  padding-left:     40px;
+  padding-right:    40px;
   padding-top:      100px;
+
+  margin:           auto;
+  margin-top:       40px;
+  margin-bottom:    60px;
+  max-width:        1024px;
 `
 
 const LogoText = styled.div`
@@ -81,7 +86,9 @@ const HeaderContentDate = styled.p`
 `
 
 const Section = styled.section`
-  margin:           40px 80px 60px 80px;
+  margin:           auto;
+  max-width:        1024px;
+  padding:          40px;
   background-color: white;
 `
 
