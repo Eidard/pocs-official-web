@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     # 'django.middleware.csrf.CsrfViewMiddleware',
-    # 'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -146,3 +146,9 @@ REST_FRAMEWORK = {
 SITE_ID = 1
 
 APPEND_SLASH = False
+
+
+# Session cookie
+# https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SESSION_COOKIE_DOMAIN
+
+SESSION_COOKIE_DOMAIN = 'localhost:8080'

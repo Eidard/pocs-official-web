@@ -6,7 +6,7 @@ from django.http import JsonResponse
 from django.views import View
 from .models import Account
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login
 import json
 
 '''
@@ -63,6 +63,7 @@ class LoginView(View):
             username=data['username'], password=data['password']
         )
         if user is not None:
+            login(request, user)
             return JsonResponse({"message": "로그인에 성공하셨습니다."}, status=200)
         else:
             return JsonResponse({"message": "id and pw are not correct."}, status=401)
