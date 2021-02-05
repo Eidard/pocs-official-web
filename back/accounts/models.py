@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import AbstractBaseUser, AbstractUser , BaseUserManager
 
 class Account(models.Model):
     username = models.CharField(max_length=32, unique=True, null=False)
@@ -9,9 +9,9 @@ class Account(models.Model):
     generation = models.IntegerField(null=False)
     student_id = models.CharField(max_length=12, unique=True, null=False)
     gender = models.CharField(max_length=6, null=False)
-    birth = models.DateField(auto_now_add=False, blank=True)
+    birth = models.DateField(blank=True)
     phone = models.CharField(max_length=13, blank=True)
-    joined_at = models.DateField(auto_now_add=False)
+    joined_at = models.DateField(auto_now_add=True)
     is_approved = models.BooleanField(default=False)
 
     class Meta:
