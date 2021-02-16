@@ -9,7 +9,7 @@ from django.contrib.auth import authenticate
 import json
 
 from .serializers import BoardSerializer
-from .models import Board # , Board_Category
+from .models import Board, Board_Category
 
 
 class BoardsView(View):

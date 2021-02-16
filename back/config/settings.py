@@ -50,9 +50,9 @@ INSTALLED_APPS = [
     # 'rest_auth.registration',
 
     # Apps
-    'accounts',
+    'accounts.apps.AccountsConfig',
+    'posts',
     'board',
-
 ]
 
 MIDDLEWARE = [
@@ -92,8 +92,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
+    'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pocs',
         'USER': 'admin',
         'PASSWORD': 'pocs1234',
@@ -150,3 +149,9 @@ REST_FRAMEWORK = {
 SITE_ID = 1
 
 APPEND_SLASH = False
+
+
+# Session cookie
+# https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SESSION_COOKIE_DOMAIN
+
+SESSION_COOKIE_DOMAIN = 'localhost:8000'
