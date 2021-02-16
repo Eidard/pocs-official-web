@@ -18,16 +18,10 @@ from django.urls import path, include
 
 
 urlpatterns = [
-<<<<<<< HEAD
-    path('', include('posts.urls')),
-    path('users/', include('accounts.urls')),
-    path('admin/', admin.site.urls),
-=======
     # path('', include('accounts.urls')),
     path('admin/', admin.site.urls),
     path('users/', include('accounts.urls')),
     path('board/', include('board.urls')),
->>>>>>> 27163a84fef69a387310993d9c8446a4a2eb04c7
     #path('rest-auth/', include('rest_auth.urls')),
     #path('rest-auth/signup/', include('rest_auth.registration.urls')),
 ]

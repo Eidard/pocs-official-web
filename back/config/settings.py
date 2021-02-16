@@ -50,15 +50,9 @@ INSTALLED_APPS = [
     # 'rest_auth.registration',
 
     # Apps
-<<<<<<< HEAD
     'accounts.apps.AccountsConfig',
     'posts',
     'board',
-=======
-    'accounts',
-    'board',
-
->>>>>>> 27163a84fef69a387310993d9c8446a4a2eb04c7
 ]
 
 MIDDLEWARE = [
