@@ -15,7 +15,12 @@ class Account(models.Model):
     birth = models.DateField(null=True)
     phone = models.CharField(max_length=13, null=True)
 
+    def __str__(self):
+        return f'{self.student_id} - {self.name}'
+
     class Meta:
         db_table = 'accounts'
         ordering = ['name', 'generation', 'student_id']
+
+
  
