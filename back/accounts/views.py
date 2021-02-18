@@ -7,6 +7,7 @@ from django.views import View
 from .models import Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.db import transaction
 import json
 
 '''
@@ -36,20 +37,21 @@ class RegisterView(View):
         elif Account.objects.filter(student_id=data['student_id']).exists():
             return JsonResponse({"message": "이미 존재하는 학번입니다."}, status=401)
         else:
-            user = User.objects.create_user(
-                username=data['username'],
-                email=data['email'],
-                password=data['password']
-            )
-            Account.objects.create(
-                user=user,
-                name=data['name'],
-                generation=data['generation'],
-                student_id=data['student_id'],
-                gender=data['gender'],
-                birth=data['birth'],
-                phone=data['phone']
-            )
+            with transaction.atomic():
+                user = User.objects.create_user(
+                    username=data['username'],
+                    email=data['email'],
+                    password=data['password']
+                )
+                Account.objects.create(
+                    user=user,
+                    name=data['name'],
+                    generation=data['generation'],
+                    student_id=data['student_id'],
+                    gender=data['gender'],
+                    birth=data['birth'],
+                    phone=data['phone']
+                )
             return JsonResponse({"message": "회원으로 가입되셨습니다."}, status=200)
 
     def get(self, request):
