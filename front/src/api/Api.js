@@ -51,3 +51,23 @@ export async function authenticate(username, password) {
 
   if (!response.ok) throw response;
 }
+
+export async function getPosts() {
+  const response = await fetch(generateUrl('/post/posts'), {
+    method: 'get',
+  });
+
+  if (!response.ok) throw response;
+
+  return await response.json();
+}
+
+export async function getPost(id) {
+  const response = await fetch(generateUrl(`/post/posts/${id}`), {
+    method: 'get',
+  });
+
+  if (!response.ok) throw response;
+
+  return await response.json();
+}
