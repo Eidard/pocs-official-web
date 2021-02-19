@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    # 'django.contrib.admin',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -50,7 +50,9 @@ INSTALLED_APPS = [
     # 'rest_auth.registration',
 
     # Apps
-    'accounts.apps.AccountsConfig'
+    'accounts.apps.AccountsConfig',
+    'posts',
+    'board',
 ]
 
 MIDDLEWARE = [
@@ -62,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+MIDDLEWARE_CLASSES = MIDDLEWARE
 
 ROOT_URLCONF = 'config.urls'
 
@@ -151,4 +155,4 @@ APPEND_SLASH = False
 # Session cookie
 # https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SESSION_COOKIE_DOMAIN
 
-SESSION_COOKIE_DOMAIN = 'localhost:8080'
+# SESSION_COOKIE_DOMAIN = 'localhost:8000'
