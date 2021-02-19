@@ -29,13 +29,13 @@ class RegisterView(View):
             phone=data['phone'],
         )
 
-
         if User.objects.filter(username=data['username']).exists():
             return JsonResponse({"message": "이미 존재하는 계정아이디입니다."}, status=401)
         elif User.objects.filter(email=data['email']).exists():
             return JsonResponse({"message": "이미 존재하는 이메일입니다."}, status=401)
         elif Account.objects.filter(student_id=data['student_id']).exists():
             return JsonResponse({"message": "이미 존재하는 학번입니다."}, status=401)
+        # elif Account.objects.filter(student_id=)
         else:
             with transaction.atomic():
                 user = User.objects.create_user(
