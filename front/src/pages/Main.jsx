@@ -1,6 +1,12 @@
-import React, {useState}  from 'react';
-import {Link, withRouter} from 'react-router-dom';
-import styled             from 'styled-components';
+import React, { useEffect, useState } from 'react';
+import {Link, withRouter}             from 'react-router-dom';
+import styled                         from 'styled-components';
+
+import Backdrop                       from '../components/Backdrop';
+
+import { getPosts }                   from '../api/Api';
+
+import { formatDate }                 from '../utils/Format';
 
 const Wrapper = styled.main`
   margin:           0px;
@@ -10,9 +16,10 @@ const Wrapper = styled.main`
 `;
 
 const Header = styled.header`
-  display:          inline-block;
-  width:            100%;
+  display:          flex;
+  flex-direction:   column;
   height:           300px;
+  margin-bottom:    10px;
   background-color: darkblue;
 `;
 
@@ -21,15 +28,12 @@ const HeaderContent = styled.div`
   font-size:        24px;
   color:            white;
   max-width:        1400px;
-  margin:           auto;
-  padding-left:     40px;
-  padding-right:     40px;
-  padding-top:      120px;
+  margin-right:     auto;
+  padding:          50px;
 `
 
 const LogoText = styled.div`
   display:          inline-block;
-  float:            left;
   margin:           15px;
   margin-right:     20px;
   line-height:      30px;
@@ -40,20 +44,21 @@ const LogoText = styled.div`
 `
 
 const NavigationBarRoot = styled.nav`
-  float:            right;
+  display:          flex;
+  align-items:      center;
 `
 
 const NavigationBarList = styled.ul`
+  display:          flex;
+  align-items:      center;
   list-style-type:  none;
-  display:          inline-block;
-  margin:           5px;
+  margin-left:      auto;
   overflow:         hidden;
 `
 
 const NavigationBarItem = styled.li`
   font-size:        14px;
   line-height:      30px;
-  margin:           10px;
   margin-left:      16px;
   margin-right:     16px;
   display:          inline-block;
@@ -83,17 +88,23 @@ const HeaderContentText = styled.p`
 `
 
 const Section = styled.section`
+  display:          flex;
+  flex-flow:        row wrap;
+  align-content:    center;
+  align-items:      center;
   margin:           auto;
-  max-width:        1400px;
-  background-color: white;
   text-align:       center;
 `
 
 const Article = styled.article`
-  margin:           10px 10px 10px 10px;
+  display:          flex;
+  justify-content:  center;
+  flex:             0 1 1200px;
+  margin:           10px auto;
   padding:          20px;
-  width:            600px;
+  width:            1200px;
   display:          inline-block;
+  background-color: white;
   text-align:       left;
 `
 
@@ -103,6 +114,7 @@ const ArticleTitle = styled.h1`
 `
 
 const ArticleRowWrapper = styled.div`
+  display:          flex;
   margin-bottom:    5px;
 `
 
@@ -117,32 +129,37 @@ const ArticleRowText = styled.span`
 `
 
 const ArticleRowDate = styled.span`
-  float:            right;
+  margin-left:      auto;
   font-size:        14px;
 `
 
-const NoticeBarArticle = styled.article`
-  margin:           auto;
-  margin-top:       20px;
-  margin-bottom:    20px;
+const NoticeBarWrapper = styled.div`
+  display:          flex;
+  justify-content:  center;
+  margin:           10px auto;
   padding:          20px;
-  max-width:        1200px;
+  width:            1200px;
   text-align:       left;
+  vertical-align:   center;
+  background-color: white;
 `
 
 const NoticeBarTitle = styled.span`
   font-weight:      bold;
   margin-right:     10px;
   font-size:        16px;
+  line-height:      20px;
 `
 
 const NoticeBarText = styled.span`
   font-size:        14px;
+  line-height:      20px;
 `
 
 const NoticeBarDate = styled.span`
-  float:            right;
+  margin-left:      auto;
   font-size:        14px;
+  line-height:      20px;
 `
 
 const Logo = (props) => {
@@ -188,22 +205,31 @@ const ArticleRow = (props) => {
 
 const NoticeBar = (props) => {
   return(
-  <Section>
-    <NoticeBarArticle>
-      <NoticeBarTitle>공지사항</NoticeBarTitle>
-      <NoticeBarText>{ props.text }</NoticeBarText>
-      <NoticeBarDate>{ props.date }</NoticeBarDate>
-    </NoticeBarArticle>
-  </Section>
+  <NoticeBarWrapper>
+    <NoticeBarTitle>공지사항</NoticeBarTitle>
+    <NoticeBarText>{ props.text }</NoticeBarText>
+    <NoticeBarDate>{ props.date }</NoticeBarDate>
+  </NoticeBarWrapper>
   );
 }
 
 export default withRouter(function Main(props) {
-  return (
+  const [posts, setPosts] = useState(null);
+  useEffect(() => {
+    (async () => {
+      try {
+        setPosts(await getPosts());
+      } catch {
+        alert('문제가 발생했습니다. 관리자에게 문의해주세요.');
+      }
+    })();
+  }, []);
+
+  return posts ? (
     <Wrapper>
       <Header>
-        <Logo text="POCS"/>
         <NavigationBarRoot>
+          <Logo text="POCS"/>
           <NavigationBarList>
             <NavigationBarButton text="Board 1" to="board"/>
             <AccountButton/>
@@ -215,101 +241,24 @@ export default withRouter(function Main(props) {
           <HeaderContentText>Pioneer Of Computer Science</HeaderContentText>
         </HeaderContent>
       </Header>
-      <NoticeBar text="Placeholder" date="2021.02.04"/>
+      <Section>
+        <NoticeBar text="Placeholder" date="2021.02.04"/>
+      </Section>
       <Section>
         <Article>
           <ArticleTitleButton text="Board 1" to="board"/>
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-        </Article>
-        <Article>
-          <ArticleTitleButton text="Board 2" to="board"/>
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-        </Article>
-        <Article>
-          <ArticleTitleButton text="Board 3" to="board"/>
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-        </Article>
-        <Article>
-          <ArticleTitleButton text="Board 4" to="board"/>
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
-          <ArticleRow
-          title="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
-          date="2021.02.04" to="post"
-          />
+          {posts.map((post) => (
+            <ArticleRow
+              key={post.id}
+              title={post.title}
+              date={formatDate(new Date(post.created_at))}
+              to={`/post/${post.id}`}
+            />
+          ))}
         </Article>
       </Section>
     </Wrapper>
+  ) : (
+   <Backdrop open />
   );
 });
