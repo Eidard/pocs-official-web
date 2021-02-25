@@ -34,15 +34,6 @@ class Post_Tag(models.Model):
         db_table = 'post_tag'
         ordering = ['post_id']
 
-
-class Post_Recommender(models.Model):
-    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-    author_id = models.ForeignKey(Account, on_delete=models.PROTECT)
-
-    class Meta:
-        db_table = 'post_recommender'
-        ordering = ['post_id', 'author_id']
-
 # class Comment(models.Model):
 #     post_id = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
 #     author_id = models.ForeignKey(Account, on_delete=models.CASCADE)
