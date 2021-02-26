@@ -71,11 +71,7 @@ class RegisterView(View):
             failChecks.append('birth')
         
         if failChecks:
-            msg = ''
-            last = failChecks.pop()
-            for failCheck in failChecks:
-                msg += failCheck + ', '
-            msg += last + '의 값이 잘못되었습니다. 다시 입력해주세요.'
+            msg = ', '.join(failChecks) + '의 값이 잘못되었습니다. 다시 입력해주세요.'
             return JsonResponse({'message': msg}, status=401)
 
         if User.objects.filter(username=data['username']).exists():
