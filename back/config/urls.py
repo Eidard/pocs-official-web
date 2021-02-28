@@ -22,7 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('accounts.urls')),
     path('board/', include('board.urls')),
-    path('post/', include('posts.urls')),
+    path('posts/', include('posts.urls')),
     # path('rest-auth/', include('rest_auth.urls')),
     # path('rest-auth/signup/', include('rest_auth.registration.urls')),
 ]

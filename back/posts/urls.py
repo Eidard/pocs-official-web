@@ -1,13 +1,11 @@
 from django.urls import path, include
-from .views import PostsViewSet
-from rest_framework import routers
+from .views import PostView, PostDetailView
 from rest_framework.urlpatterns import format_suffix_patterns
 
-router = routers.DefaultRouter()
-router.register(r'posts', PostsViewSet)
 
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', PostView.as_view()),
+    path('<int:post_id>/', PostDetailView.as_view()),
 ]
 
 #urlpatterns = format_suffix_patterns(urlpatterns)
