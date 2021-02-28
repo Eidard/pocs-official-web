@@ -8,9 +8,12 @@ Django==3.1.6
 django-allauth==0.44.0
 django-rest-auth==0.9.5
 djangorestframework==3.12.2
+djangorestframework-jwt==1.11.0
 idna==2.10
+Markdown==3.3.4
 mysqlclient==2.0.3
 oauthlib==3.1.0
+Pillow==8.1.0
 pycparser==2.20
 PyJWT==2.0.1
 python3-openid==3.2.0
