@@ -7,7 +7,7 @@ from .models import Post
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'modified_at', 'tag_list')
-    list_filter = ('modified_at',)
+    list_filter = ('created_at',)
     search_fields = ('title', 'plain_content')
     #prepopulated_fields = ('title', 'preview_content', )
 

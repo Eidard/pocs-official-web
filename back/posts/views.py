@@ -1,14 +1,13 @@
 import json
 from io import StringIO
 from django.shortcuts import get_object_or_404
-from .models import Post, Post_Tag
+from .models import Post #, Post_Tag
 from board.models import Board
 from accounts.models import Account
 from markdown import Markdown, markdown
 from django.http import JsonResponse
 from django.views import View
 from .serializers import PostSerializer
-
 
 # markdown to plain text
 def unmark_element(element, stream=None):
@@ -38,7 +37,7 @@ class PostView(View):
         html_text = markdown(data['md_content'])
         plain_text = unmark(data['md_content'])
 
-        Post.objects.create(
+        post = Post.objects.create(
             title = data['title'],
             content = html_text,
             md_content = data['md_content'],
@@ -49,11 +48,15 @@ class PostView(View):
             author_id = Account.objects.get(id=data['author_id']),
             hits = 0
         )
+        
+        #post.tags.add(tag.strip() for tag in data['tags'].split(','))
+
         return JsonResponse({"message":"Post를 생성했습니다"}, status=200)
 
     def get(self, request):
         post = Post.objects.values()
-        # post_tag = Post_Tag.objects.values()
+        #post_tag = ', '.join(o.name for o in Post.tags.all()) 
+        #print(post_tag)
         return JsonResponse({"list": list(post) + list(post_tag)}, status=200)
 
 

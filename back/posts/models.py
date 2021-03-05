@@ -1,6 +1,7 @@
 from django.db import models
 from board.models import Board
 from accounts.models import Account
+from taggit.managers import TaggableManager
 
 
 class Post(models.Model):
@@ -26,15 +27,15 @@ class Post(models.Model):
         db_table = 'post'
         ordering = ['modified_at', 'hits', 'created_at', 'title']
 
-'''
-class Post_Tag(models.Model):
-    name = models.CharField(max_length=64)
-    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
 
-    class Meta:
-        db_table = 'post_tag'
-        ordering = ['post_id']
-'''
+# class Post_Tag(models.Model):
+#    name = models.CharField(max_length=64)
+#    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+#
+#    class Meta:
+#        db_table = 'post_tag'
+#        ordering = ['post_id']
+
 # class Comment(models.Model):
 #     post_id = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
 #     author_id = models.ForeignKey(Account, on_delete=models.CASCADE)
