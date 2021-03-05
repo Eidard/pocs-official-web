@@ -49,6 +49,10 @@ INSTALLED_APPS = [
     # 'allauth.account',
     # 'rest_auth.registration',
 
+    # Hashtag
+    'taggit.apps.TaggitAppConfig',
+    'taggit_templatetags2',
+
     # Apps
     'accounts.apps.AccountsConfig',
     'posts',

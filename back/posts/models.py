@@ -17,6 +17,7 @@ class Post(models.Model):
     board_id = models.ForeignKey(Board, on_delete=models.PROTECT)
     author_id = models.ForeignKey(Account, on_delete=models.PROTECT)
     hits = models.PositiveIntegerField(default=0)
+    tags = TaggableManager(blank=True)
 
     def __str__(self):
         return f'{self.title} - ' + str(self.created_at)[:10]
@@ -25,7 +26,7 @@ class Post(models.Model):
         db_table = 'post'
         ordering = ['modified_at', 'hits', 'created_at', 'title']
 
-
+'''
 class Post_Tag(models.Model):
     name = models.CharField(max_length=64)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
@@ -33,7 +34,7 @@ class Post_Tag(models.Model):
     class Meta:
         db_table = 'post_tag'
         ordering = ['post_id']
-
+'''
 # class Comment(models.Model):
 #     post_id = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
 #     author_id = models.ForeignKey(Account, on_delete=models.CASCADE)

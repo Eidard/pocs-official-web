@@ -7,8 +7,9 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = '__all__'
 
-
+'''
 class PostTagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post_Tag
         fields = '__all__'
+'''
