@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'posts',
     'board',
+    'index',
 ]
 
 MIDDLEWARE = [
