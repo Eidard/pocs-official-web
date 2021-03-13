@@ -11,7 +11,7 @@ from .markdown import *
 from accounts.models import Account
 from accounts.serializers import AccountSerializerInPost
 
-from .models import Post #, Post_Tag
+from .models import Post
 from .serializers import PostDetailSerializer
 
 from board.models import Board
@@ -49,6 +49,7 @@ class PostView(View):
         # print(post_tag)
         return JsonResponse({"list": list(post)}, status=200)
 
+
 class PostDetailView(View):
     @method_decorator(login_required, name="dispatch")
     def post(self, request, post_id):
@@ -56,23 +57,26 @@ class PostDetailView(View):
 
         post = get_object_or_404(Post, id=post_id)
 
-        html_text = markdown(data['md_content'])
-        plain_text = unmark(data['md_content'])
+        if post.author_id.id == request.user.id or request.user.is_superuser:
+            html_text = markdown(data['md_content'])
+            plain_text = unmark(data['md_content'])
 
-        post.title = data['title']
-        post.content = html_text
-        post.md_content = data['md_content']
-        post.plain_content =  plain_text
-        post.preview_content = plain_text[:128]
-        post.background_image_url = data['background_image_url']
+            post.title = data['title']
+            post.content = html_text
+            post.md_content = data['md_content']
+            post.plain_content =  plain_text
+            post.preview_content = plain_text[:128]
+            post.background_image_url = data['background_image_url']
 
-        with transaction.atomic():
-            post.tags.clear()
-            for tag in data['tags'].split(','):
-                post.tags.add(tag.strip())
-            post.save()
+            with transaction.atomic():
+                post.tags.clear()
+                for tag in data['tags'].split(','):
+                    post.tags.add(tag.strip())
+                post.save()
 
-        return JsonResponse({"message":"Post를 수정했습니다"}, status=200)
+            return JsonResponse({"message":"Post를 수정했습니다"}, status=200)
+        else:
+            return JsonResponse({"message":"Post 수정 권한이 없습니다"}, status=403)
 
     def get(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
@@ -87,3 +91,15 @@ class PostDetailView(View):
         response_data['board'] = BoardCategorySerializer(post.board_id).data
         
         return JsonResponse(response_data, status=200)
+
+    @method_decorator(login_required, name="dispatch")
+    def delete(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        
+        if post.author_id.id == request.user.id or request.user.is_superuser:
+            return_message = "'" + post.title + "' 글이 삭제되었습니다"
+            post.tags.clear()
+            post.delete()        
+            return JsonResponse({"message" : return_message}, status=200)
+        else:
+            return JsonResponse({"message" : "Post 삭제 권한이 없습니다"}, status=200)
