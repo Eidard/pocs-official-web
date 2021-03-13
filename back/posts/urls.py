@@ -1,6 +1,6 @@
 from django.urls import path, include
-from .views import PostView, PostDetailView
 from rest_framework.urlpatterns import format_suffix_patterns
+from .views import PostView, PostDetailView
 
 
 urlpatterns = [
