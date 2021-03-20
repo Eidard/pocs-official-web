@@ -1,23 +1,16 @@
 import json
 import re
 import datetime
-from .serializers import AccountSerializer
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.decorators import renderer_classes
+
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.views import View
-from .models import Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.db import transaction
 
-'''
-class SignUpView(generics.CreateAPIView):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
-'''
-
+from .models import Account
+from .serializers import AccountSerializerInSearch, AccountDetailSerializerForAnonymousUser, AccountDetailSerializerForNonAnonymousUser, UserDetailSerializer
 
 class RegisterView(View):
     def post(self, request):
@@ -114,8 +107,22 @@ class LoginView(View):
             login(request, user)
             return JsonResponse({"message": "로그인에 성공하셨습니다."}, status=200)
         else:
-            return JsonResponse({"message": "id and pw are not correct."}, status=401)
+            return JsonResponse({"message": "ID와 PASSWORD를 잘못 입력하셨습니다. 다시 입력해주세요"}, status=401)
 
     def get(self, request):
         user = User.objects.values()
         return JsonResponse({"list": list(user)}, status=200)
+
+class UserDetailView(View):
+    def get(self, request, author_id):
+        author = get_object_or_404(Account, id = author_id)
+        response_data = {}
+        if request.user.is_active:
+            author_data = AccountDetailSerializerForNonAnonymousUser(author).data
+            user = User.objects.filter(id=author.user_id).values('email')
+            author_data.update(list(user)[0])
+        else:
+            author_data = AccountDetailSerializerForAnonymousUser(author).data
+            
+        response_data['author'] = author_data
+        return JsonResponse(response_data, status=200)
