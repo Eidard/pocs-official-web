@@ -23,6 +23,7 @@ urlpatterns = [
     path('users/', include('accounts.urls')),
     path('board/', include('board.urls')),
     path('posts/', include('posts.urls')),
+    path('search/', include('search.urls')),
     # path('rest-auth/', include('rest_auth.urls')),
     # path('rest-auth/signup/', include('rest_auth.registration.urls')),
 ]

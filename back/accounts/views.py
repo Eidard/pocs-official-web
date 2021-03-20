@@ -1,24 +1,17 @@
 import json
 import re
 import datetime
-from .serializers import AccountSerializer
-from rest_framework import generics
-from rest_framework.response import Response
-from rest_framework.decorators import renderer_classes
+
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.views import View
-from .models import Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.db import transaction
 from django.shortcuts import get_object_or_404
 
-'''
-class SignUpView(generics.CreateAPIView):
-    queryset = Account.objects.all()
-    serializer_class = AccountSerializer
-'''
-
+from .models import Account
+from .serializers import AccountSerializerInSearch, AccountDetailSerializerForAnonymousUser, AccountDetailSerializerForNonAnonymousUser, UserDetailSerializer
 
 class RegisterView(View):
     def post(self, request):
@@ -136,3 +129,18 @@ class PermissionView(View):
             return JsonResponse({"message": response_message}, status=200)
         else:
             return JsonResponse({"message": "승인 권한이 없습니다"}, status=403)
+
+
+class UserDetailView(View):
+    def get(self, request, author_id):
+        author = get_object_or_404(Account, id = author_id)
+        response_data = {}
+        if request.user.is_active:
+            author_data = AccountDetailSerializerForNonAnonymousUser(author).data
+            user = User.objects.filter(id=author.user_id).values('email')
+            author_data.update(list(user)[0])
+        else:
+            author_data = AccountDetailSerializerForAnonymousUser(author).data
+            
+        response_data['author'] = author_data
+        return JsonResponse(response_data, status=200)

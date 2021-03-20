@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'posts',
     'board',
     'index',
+    'search',
 ]
 
 MIDDLEWARE = [
