@@ -11,6 +11,7 @@ from .models import Account
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 
 '''
 class SignUpView(generics.CreateAPIView):
@@ -85,7 +86,8 @@ class RegisterView(View):
                 user = User.objects.create_user(
                     username=data['username'],
                     email=data['email'],
-                    password=data['password']
+                    password=data['password'],
+                    is_active=False
                 )
                 Account.objects.create(
                     user=user,
@@ -114,8 +116,23 @@ class LoginView(View):
             login(request, user)
             return JsonResponse({"message": "로그인에 성공하셨습니다."}, status=200)
         else:
-            return JsonResponse({"message": "id and pw are not correct."}, status=401)
+            return JsonResponse({"message": "아이디나 비밀번호가 잘못되었습니다. 다시 입력해주세요."}, status=401)
 
     def get(self, request):
         user = User.objects.values()
         return JsonResponse({"list": list(user)}, status=200)
+
+
+class PermissionView(View):
+    def patch(self, request, user_id):
+        if request.user.is_superuser:
+            user = get_object_or_404(User, id=user_id)
+            if user.is_active:
+                response_message = "'" + user.username + "'님은 이미 승인된 계정입니다"
+            else:
+                response_message = "'" + user.username + "'님이 정상적으로 승인되었습니다"
+                user.is_active = True
+                user.save(update_fields=['is_active'])
+            return JsonResponse({"message": response_message}, status=200)
+        else:
+            return JsonResponse({"message": "승인 권한이 없습니다"}, status=403)
