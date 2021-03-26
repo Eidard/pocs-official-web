@@ -11,7 +11,7 @@ import { formatDate } from '../utils/Format';
 const Wrapper = styled.main`
   margin: 0px;
   background-color: #eee;
-  height: 100%;
+  min-height: 100%;
 `;
 
 const Header = styled.header`
@@ -86,6 +86,7 @@ const HeaderContentText = styled.p`
 
 const Section = styled.section`
   margin: 40px 10px 10px 10px;
+  padding-bottom: 40px;
 `;
 
 const Article = styled.article`
@@ -187,7 +188,7 @@ export default withRouter(function Board(props) {
       <Section>
         <Article>
           <ArticleTitle>최근 게시글</ArticleTitle>
-          {posts.map((post) => (
+          {posts.list.map((post) => (
             <ArticleRow
               key={post.id}
               title={post.title}

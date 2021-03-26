@@ -11,7 +11,7 @@ import { formatDate }                 from '../utils/Format';
 const Wrapper = styled.main`
   margin:           0px;
   background-color: #eee;
-  height:           100%;
+  min-height:           100%;
   text-align:       center;
 `;
 
@@ -21,6 +21,7 @@ const Header = styled.header`
   height:           300px;
   margin-bottom:    10px;
   background-color: darkblue;
+  padding-bottom:   40px;
 `;
 
 const HeaderContent = styled.div`
@@ -224,7 +225,6 @@ export default withRouter(function Main(props) {
       }
     })();
   }, []);
-
   return posts ? (
     <Wrapper>
       <Header>
@@ -247,7 +247,7 @@ export default withRouter(function Main(props) {
       <Section>
         <Article>
           <ArticleTitleButton text="Board 1" to="board"/>
-          {posts.map((post) => (
+          {posts.list.map((post) => (
             <ArticleRow
               key={post.id}
               title={post.title}

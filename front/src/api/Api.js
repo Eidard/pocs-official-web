@@ -1,5 +1,5 @@
 // const HOST = 'http://52.78.88.64';
-const HOST = 'http://localhost:5000';
+const HOST = 'http://localhost:8000';
 
 export function generateUrl(path) {
   return `${HOST}${path}/`;
@@ -53,7 +53,7 @@ export async function authenticate(username, password) {
 }
 
 export async function getPosts() {
-  const response = await fetch(generateUrl('/post/posts'), {
+  const response = await fetch(generateUrl('/posts'), {
     method: 'get',
   });
 
@@ -63,7 +63,7 @@ export async function getPosts() {
 }
 
 export async function getPost(id) {
-  const response = await fetch(generateUrl(`/post/posts/${id}`), {
+  const response = await fetch(generateUrl(`/posts/${id}`), {
     method: 'get',
   });
 
