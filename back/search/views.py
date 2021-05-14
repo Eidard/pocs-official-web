@@ -33,9 +33,10 @@ class SearchView(View):
             posts_data.append(post_data)
         response_data['posts'] = posts_data
         if response_data['posts']:
+            response_data['searchKeyword'] = keyword.replace('-', ' ')
             return JsonResponse(response_data, status=200)
         else:
-            return JsonResponse({"message":"검색 결과가 없습니다"}, status=200)
+            return JsonResponse({"message":f"'{keyword.replace('-', ' ')}'의 검색 결과가 없습니다"}, status=200)
 
 
 class AuthorSearchView(View):
@@ -55,11 +56,23 @@ class AuthorSearchView(View):
             authors_data.append(author_data)
         response_data['authors'] = authors_data
         if response_data['authors']:
+            response_data['searchKeyword'] = name
             return JsonResponse(response_data, status=200)
         else:
-            return JsonResponse({"message":"검색 결과가 없습니다"}, status=200)
+            return JsonResponse({"message":f"작성자 '{name}'의 검색 결과가 없습니다"}, status=200)
 
 
 class TagSearchView(View):
     def get(self, request, tag):
-        pass
+        posts = Post.objects.filter(tags__name__in=[tag])
+        posts_data = []
+        response_data = {}
+        for post in posts:
+            post_data = PostSerializerInBoard(post).data
+            posts_data.append(post_data)
+        response_data['posts'] = posts_data
+        if response_data['posts']:
+            response_data['searchKeyword'] = tag
+            return JsonResponse(response_data, status=200)
+        else:
+            return JsonResponse({"message":f"해시태그 '{tag}'의 검색 결과가 없습니다"}, status=200)
