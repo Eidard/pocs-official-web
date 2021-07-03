@@ -1,3 +1,4 @@
+from .common import BACKGROUND_IMAGES_MEDIA_DIR, file_upload_path
 from django.db import models
 from board.models import Board
 from accounts.models import Account
@@ -12,7 +13,7 @@ class Post(models.Model):
     plain_content = models.TextField(null=True)
     preview_content = models.CharField(
         max_length=128)  # 플레인 컨텐츠 중에서 적당히 앞에 있는 128자
-    background_image_url = models.URLField(max_length=256, blank=True)
+    background_image_url = models.ImageField(upload_to=BACKGROUND_IMAGES_MEDIA_DIR, default=f"{BACKGROUND_IMAGES_MEDIA_DIR}/default_background_image.jpg")
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     board_id = models.ForeignKey(Board, on_delete=models.PROTECT)
@@ -28,13 +29,18 @@ class Post(models.Model):
         ordering = ['modified_at', 'hits', 'created_at', 'title']
 
 
-# class Post_Tag(models.Model):
-#    name = models.CharField(max_length=64)
-#    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
-#
-#    class Meta:
-#        db_table = 'post_tag'
-#        ordering = ['post_id']
+class PostFile(models.Model):
+    post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+    title = models.CharField(max_length=256)
+    file = models.FileField(upload_to=file_upload_path, null=True)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = 'files'
+        ordering = ['post_id', 'title']
+
 
 # class Comment(models.Model):
 #     post_id = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')

@@ -110,7 +110,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -159,6 +158,8 @@ SITE_ID = 1
 
 APPEND_SLASH = False
 
+MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_URL = '/media/'
 
 # Session cookie
 # https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SESSION_COOKIE_DOMAIN

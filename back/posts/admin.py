@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post
+from .models import Post, PostFile
 
 #admin.site.register(Post)
 
@@ -16,3 +16,8 @@ class PostAdmin(admin.ModelAdmin):
 
     def tag_list(self, obj):
         return ', '.join(o.name for o in obj.tags.all()) 
+
+class PostFileInline(admin.TabularInline):
+    model = PostFile
+
+admin.site.register(PostFile)
