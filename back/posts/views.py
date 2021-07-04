@@ -1,4 +1,5 @@
 import json
+import os
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -33,8 +34,10 @@ class PostView(View):
 
         savedFilePaths = []
         try:
+            base_dir_len = len(os.getcwd())
+
             with transaction.atomic():
-                post = Post(
+                post = Post.objects.create(
                     title = data['title'],
                     content = html_text,
                     md_content = data['md_content'],
@@ -45,23 +48,18 @@ class PostView(View):
                     author_id = Account.objects.get(user_id=request.user.id),
                     hits = 0
                 )
+                savedFilePaths.append(post.background_image_url.path[base_dir_len + 1:].replace('\\', '/'))
 
-                files = []
                 for f in request.FILES.getlist('files'):
-                    files.append(PostFile(
+                    file = PostFile.objects.create(
                         post_id = post,
                         title = f.name,
                         file = f
-                    ))
+                    )
+                    savedFilePaths.append(file.file.path[base_dir_len + 1:].replace('\\', '/'))
 
                 for tag in data['tags'].split(','):
                     post.tags.add(tag.strip())
-
-                post.save()
-                savedFilePaths.append(post.background_image_url.path[51:].replace('\\', '/'))
-                for file in files:
-                    file.save()
-                    savedFilePaths.append(file.file.path[51:].replace('\\', '/'))
         except:
             try:
                 remove_saved_files_and_empty_dirs(savedFilePaths)
