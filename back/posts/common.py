@@ -2,8 +2,8 @@ import datetime
 import os
 import uuid
 
-FiLE_MEDIA_DIR = 'files'
-BACKGROUND_IMAGES_MEDIA_DIR = 'backgroundImages'
+from django.conf import settings
+
 
 def file_upload_path(instance, filename):
     ext = filename.split('.')[-1]
@@ -11,7 +11,7 @@ def file_upload_path(instance, filename):
     filepath = d.strftime("%Y/%m/%d")
     suffix = d.strftime("%Y%m%d%H%M%S")
     filename = f"{uuid.uuid4().hex}_{suffix}.{ext}"
-    return os.path.join(f'{FiLE_MEDIA_DIR}/' + filepath, filename)
+    return os.path.join(f'{settings.FILE_MEDIA_DIR}/' + filepath, filename)
 
 def is_dir_empty(path):
     return next(os.scandir(path), None) is None
@@ -19,13 +19,18 @@ def is_dir_empty(path):
 def remove_saved_files_and_empty_dirs(savedFilePaths):
     filePaths = []
     for filePath in savedFilePaths:
-        os.remove(filePath)
-        filePaths.append(filePath[:filePath.rfind('/')])
+        if filePath == f'media/{settings.DEFAULT_IMAGE_RELATIVE_PATH}':
+            continue
+        if os.path.exists(filePath):
+            os.remove(filePath)
+            filePaths.append(filePath[:filePath.rfind('/')])
     filePaths = tuple(set(filePaths))
     for fp in filePaths:
         while True:
-            if fp == f'media/{BACKGROUND_IMAGES_MEDIA_DIR}' or fp == f'media/{FiLE_MEDIA_DIR}':
+            if fp == f'media/{settings.BACKGROUND_IMAGES_MEDIA_DIR}' or fp == f'media/{settings.FILE_MEDIA_DIR}' or fp == 'media':
                 break
-            if is_dir_empty(fp):
+            if os.path.exists(fp) and is_dir_empty(fp):
                 os.rmdir(fp)
+            if fp.rfind('/') == -1:
+                break
             fp = fp[:fp.rfind('/')]

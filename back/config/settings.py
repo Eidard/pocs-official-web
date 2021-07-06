@@ -101,6 +101,9 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
+        'OPTIONS' : {
+            'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pocs',
         'USER': 'admin',
@@ -160,6 +163,11 @@ APPEND_SLASH = False
 
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
+
+FILE_MEDIA_DIR = 'files'
+BACKGROUND_IMAGES_MEDIA_DIR = 'backgroundImages'
+
+DEFAULT_IMAGE_RELATIVE_PATH = f'{BACKGROUND_IMAGES_MEDIA_DIR}/default/default_background_image.jpg'
 
 # Session cookie
 # https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SESSION_COOKIE_DOMAIN
