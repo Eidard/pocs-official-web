@@ -7,11 +7,13 @@ from django.shortcuts import get_object_or_404
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.db import transaction
-from django.shortcuts import get_object_or_404
 
 from .models import Account
-from .serializers import AccountSerializerInSearch, AccountDetailSerializerForAnonymousUser, AccountDetailSerializerForNonAnonymousUser, UserDetailSerializer
+from .serializers import AccountDetailSerializerForAnonymousUser, AccountDetailSerializerForNonAnonymousUser
+
 
 class RegisterView(View):
     def post(self, request):
@@ -75,22 +77,25 @@ class RegisterView(View):
         elif Account.objects.filter(student_id=data['student_id']).exists():
             return JsonResponse({"message": "이미 존재하는 학번입니다."}, status=401)
         else:
-            with transaction.atomic():
-                user = User.objects.create_user(
-                    username=data['username'],
-                    email=data['email'],
-                    password=data['password'],
-                    is_active=False
-                )
-                Account.objects.create(
-                    user=user,
-                    name=data['name'],
-                    generation=gen,
-                    student_id=data['student_id'],
-                    gender=data['gender'],
-                    birth=data['birth'],
-                    phone=data['phone']
-                )
+            try:
+                with transaction.atomic():
+                    user = User.objects.create_user(
+                        username=data['username'],
+                        email=data['email'],
+                        password=data['password'],
+                        is_active=False
+                    )
+                    Account.objects.create(
+                        user=user,
+                        name=data['name'],
+                        generation=gen,
+                        student_id=data['student_id'],
+                        gender=data['gender'],
+                        birth=data['birth'],
+                        phone=data['phone']
+                    )
+            except:
+                return JsonResponse({"message": "회원 가입에 실패했습니다. 확인 후 다시 시도해주세요."}, status=400)
             return JsonResponse({"message": "회원으로 가입되셨습니다."}, status=200)
 
     def get(self, request):
@@ -103,7 +108,8 @@ class LoginView(View):
     def post(self, request):
         data = json.loads(request.body)
         user = authenticate(
-            username=data['username'], password=data['password']
+            username=data['username'], 
+            password=data['password']
         )
         if user is not None:
             login(request, user)
@@ -117,6 +123,7 @@ class LoginView(View):
 
 
 class PermissionView(View):
+    @method_decorator(login_required, name="dispatch")
     def patch(self, request, user_id):
         if request.user.is_superuser:
             user = get_object_or_404(User, id=user_id)
@@ -134,13 +141,11 @@ class PermissionView(View):
 class UserDetailView(View):
     def get(self, request, author_id):
         author = get_object_or_404(Account, id = author_id)
-        response_data = {}
         if request.user.is_active:
-            author_data = AccountDetailSerializerForNonAnonymousUser(author).data
+            response_data = AccountDetailSerializerForNonAnonymousUser(author).data
             user = User.objects.filter(id=author.user_id).values('email')
-            author_data.update(list(user)[0])
+            response_data.update(list(user)[0])
         else:
-            author_data = AccountDetailSerializerForAnonymousUser(author).data
-            
-        response_data['author'] = author_data
+            response_data = AccountDetailSerializerForAnonymousUser(author).data
+
         return JsonResponse(response_data, status=200)

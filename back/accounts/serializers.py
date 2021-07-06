@@ -26,8 +26,3 @@ class AccountDetailSerializerForNonAnonymousUser(serializers.ModelSerializer):
     class Meta:
         model = Account
         fields = ('name', 'student_id', 'generation', 'gender', 'birth', 'phone')
-
-class UserDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('email',)
