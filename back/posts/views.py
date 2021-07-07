@@ -9,7 +9,7 @@ from django.db import transaction
 from django.conf import settings
 
 from .markdown import *
-from .common import remove_saved_files_and_empty_dirs
+from .common import hash_from_file, remove_saved_files_and_empty_dirs
 
 from accounts.models import Account
 from accounts.serializers import AccountSerializerInPost
@@ -54,11 +54,15 @@ class PostView(View):
                 savedFilePaths.append(post.background_image_real_relative_path)
                 
                 for f in request.FILES.getlist('files'):
+                    ff = f.open()
+                    file_hash = hash_from_file(ff)
                     file = PostFile.objects.create(
                         post_id = post,
                         title = f.name,
-                        file = f
+                        file = f,
+                        hash = file_hash
                     )
+                    ff.close()
                     savedFilePaths.append(file.file.url[1:])
 
                 for tag in data['tags'].split(','):
@@ -111,18 +115,34 @@ class PostDetailView(View):
         try:
             with transaction.atomic():
                 files = PostFile.objects.filter(post_id=post_id)
-                for file in files:
+                fileList = list(files)
+                for f in request.FILES.getlist('files'):
+                    isItSameFile = False
+                    try:
+                        ff = f.open()
+                        file_hash = hash_from_file(ff)
+                        for file in files:
+                            if file.hash == file_hash:
+                                isItSameFile = True
+                                fileList.remove(file)
+                                ff.close()
+                                break
+                        if isItSameFile:
+                            continue
+                        fileInstance = PostFile.objects.create(
+                                post_id = post,
+                                title = f.name,
+                                file = f,
+                                hash = file_hash
+                        )
+                        savedFilePaths.append(fileInstance.file.url[1:])
+                    finally:
+                        ff.close()
+
+                for file in fileList:
                     removeFilePaths.append(file.file.url[1:])
                     file.delete()
                 remove_saved_files_and_empty_dirs(removeFilePaths)
-                
-                for f in request.FILES.getlist('files'):
-                    fileInstance = PostFile.objects.create(
-                            post_id = post,
-                            title = f.name,
-                            file = f
-                    )
-                    savedFilePaths.append(fileInstance.file.url[1:])
                 
                 post.tags.clear()
                 for tag in data['tags'].split(','):
@@ -174,7 +194,7 @@ class PostDetailView(View):
                 postFiles = PostFile.objects.filter(post_id=post_id)
                 for file in postFiles:
                     savedFilePaths.append(file.file.url[1:])
-
+                
                 remove_saved_files_and_empty_dirs(savedFilePaths)
                 post.tags.clear()
                 post.delete()

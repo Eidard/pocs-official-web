@@ -1,6 +1,7 @@
 import datetime
 import os
 import uuid
+import hashlib
 
 from django.conf import settings
 
@@ -34,3 +35,12 @@ def remove_saved_files_and_empty_dirs(savedFilePaths):
             if fp.rfind('/') == -1:
                 break
             fp = fp[:fp.rfind('/')]
+
+def hash_from_file(fileInstance):
+    ctx = hashlib.sha256()
+    if fileInstance.multiple_chunks():
+        for data in fileInstance.chunks():
+            ctx.update(data)
+    else:
+        ctx.update(fileInstance.read())
+    return ctx.hexdigest()
