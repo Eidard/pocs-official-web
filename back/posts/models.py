@@ -39,7 +39,7 @@ class PostFile(models.Model):
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
     title = models.CharField(max_length=256)
     file = models.FileField(upload_to=file_upload_path, null=True)
-    hash = models.CharField(max_length=65, null=True)
+    hash = models.CharField(max_length=64, null=True)
 
     def __str__(self):
         return self.title
