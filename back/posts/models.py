@@ -11,10 +11,8 @@ class Post(models.Model):
     title = models.CharField(max_length=256)
     content = models.TextField()  # 유저가 입력한 마크다운 텍스트를 HTML로 렌더링시킨 상태
     md_content = models.TextField()  # 유저가 입력한 값 그대로 (마크다운형식을 따랐을 것이라고 가정)
-    # 유저가 입력한 마크다운 텍스트를 일반 텍스트로 변환 (HTML로 치면 태그 제거된 텍스트)
-    plain_content = models.TextField(null=True)
-    preview_content = models.CharField(
-        max_length=128)  # 플레인 컨텐츠 중에서 적당히 앞에 있는 128자
+    plain_content = models.TextField(null=True) # 유저가 입력한 마크다운 텍스트를 일반 텍스트로 변환 (HTML로 치면 태그 제거된 텍스트)
+    preview_content = models.CharField(max_length=128)  # 플레인 컨텐츠 중에서 적당히 앞에 있는 128자
     background_image_url = models.ImageField(upload_to=settings.BACKGROUND_IMAGES_MEDIA_DIR, default=settings.DEFAULT_IMAGE_RELATIVE_PATH)
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
@@ -42,7 +40,7 @@ class PostFile(models.Model):
     hash = models.CharField(max_length=64, null=True)
 
     def __str__(self):
-        return self.title
+        return self.title 
 
     @property
     def real_file_name(self):

@@ -36,7 +36,7 @@ def remove_saved_files_and_empty_dirs(savedFilePaths):
                 break
             fp = fp[:fp.rfind('/')]
 
-def hash_from_file(fileInstance):
+def get_file_hash(fileInstance):
     ctx = hashlib.sha256()
     if fileInstance.multiple_chunks():
         for data in fileInstance.chunks():
