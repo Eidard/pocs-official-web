@@ -169,6 +169,27 @@ BACKGROUND_IMAGES_MEDIA_DIR = 'backgroundImages'
 
 DEFAULT_IMAGE_RELATIVE_PATH = f'{BACKGROUND_IMAGES_MEDIA_DIR}/default/default_background_image.jpg'
 
+MAX_FILE_UPLOAD_SIZE = 104857600
+MAX_FILE_UPLOAD_SIZE_TO_UNIT_NOTATION = '100MB'
+'''
+64KB = 65536
+512KB = 524288
+1MB = 1048576
+100MB = 104857600
+500MB = 524288000
+1GB = 1073741824
+'''
+
+ALLOWED_FILE_EXTENTIONS = (
+    'hwp', 'ppt', 'pptx', 'xlsx', 'xls', 'cell', 'show', 'pdf', 'doc', 'docx', 'csv', # 문서 파일 확장자
+    'avi', 'mp4', 'mov', 'wmv', # 비디오 파일 확장자
+    'txt',  # 텍스트 파일 확장자
+    'zip', '7z',  # 압축 파일 확장자
+    'jpg', 'jpeg', 'gif', 'png', 'bmp',   # 이미지 파일 확장자
+)
+
+MAX_TAG_COUNT_IN_POST = 10
+
 # Session cookie
 # https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SESSION_COOKIE_DOMAIN
 

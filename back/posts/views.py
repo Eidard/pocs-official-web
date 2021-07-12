@@ -1,4 +1,5 @@
 import os
+from django.core.exceptions import ValidationError
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse, HttpResponse
@@ -9,7 +10,9 @@ from django.db import transaction
 from django.conf import settings
 
 from .markdown import *
-from .common import hash_from_file, remove_saved_files_and_empty_dirs
+from .common import get_file_hash, remove_saved_files_and_empty_dirs
+from .forms import PostFormExceptFiles
+from .validators import FileValidator
 
 from accounts.models import Account
 from accounts.serializers import AccountSerializerInPost
@@ -23,31 +26,58 @@ from board.serializers import BoardCategorySerializer
 
 class PostView(View):
     @method_decorator(login_required, name="dispatch")
-    def post(self, request):
+    def post(self, request):        
+        success_message = "글 생성에 성공했습니다."
+        error_messages = {
+            'wrong_request' : "잘못된 요청입니다. 다시 시도해주세요.",
+            'not_permitted' : "글 생성 권한이 없습니다. 인증된 회원 계정으로 로그인 후 다시 시도해주세요.",
+            'file_max_size_over' : f"첨부한 파일(들)의 총 용량이 글 하나당 저장 가능한 최대 용량({settings.MAX_FILE_UPLOAD_SIZE_TO_UNIT_NOTATION})을 넘어갑니다.",
+            'invalid_board_id' : "입력한 보드가 존재하지 않습니다. 확인 후 다시 시도해주세요.",
+            'fail_create_post' : "글 생성에 실패했습니다. 확인 후 다시 시도해주세요."
+        }
+
         data = request.POST
 
         if data is None:
-            return JsonResponse({"message": "잘못된 요청입니다. 다시 시도해주세요."}, status=400)
+            return JsonResponse({"message": error_messages['wrong_request']}, status=400)
 
         if not request.user.is_active:
-            return JsonResponse({"message":"글 생성 권한이 없습니다. 인증된 회원 계정으로 로그인 후 다시 시도해주세요."}, status=403)
+            return JsonResponse({"message":error_messages['not_permitted']}, status=403)
 
-        html_text = markdown(data['md_content'])
-        plain_text = unmark(data['md_content'])
+        form = PostFormExceptFiles(data, request.FILES)
+        if not form.is_valid():
+            return JsonResponse({"message":form.errors}, status=400)
+        if not Board.objects.filter(id=form.cleaned_data['board_id']).exists():
+            return JsonResponse({"message":error_messages['invalid_board_id']}, status=404)
 
-        background_image = settings.DEFAULT_IMAGE_RELATIVE_PATH if 'background_image_url' in data else request.FILES['background_image_url']
+        total_file_size = 0
+        for file in request.FILES.getlist('files'):
+            total_file_size += file.size
+            fv = FileValidator(allowed_extensions=settings.ALLOWED_FILE_EXTENTIONS)
+            try:
+                if total_file_size > settings.MAX_FILE_UPLOAD_SIZE:
+                    raise ValidationError(message=error_messages['file_max_size_over'])
+                fv(file)
+            except ValidationError as e:
+                return JsonResponse({"message": e.message}, status=400)
+
+        md_content = form.cleaned_data['md_content']
+        html_text = markdown(md_content)
+        plain_text = unmark(md_content)
+
+        background_image = settings.DEFAULT_IMAGE_RELATIVE_PATH if form.cleaned_data['background_image_url'] is None else form.cleaned_data['background_image_url']
 
         savedFilePaths = []
         try:
             with transaction.atomic():
                 post = Post.objects.create(
-                    title = data['title'],
+                    title = form.cleaned_data['title'],
                     content = html_text,
-                    md_content = data['md_content'],
+                    md_content = md_content,
                     plain_content =  plain_text,
                     preview_content = plain_text[:128],
                     background_image_url = background_image,
-                    board_id = get_object_or_404(Board, id=data['board_id']),
+                    board_id = get_object_or_404(Board, id=form.cleaned_data['board_id']),
                     author_id = get_object_or_404(Account, user_id=request.user.id),
                     hits = 0
                 )
@@ -55,7 +85,7 @@ class PostView(View):
                 
                 for f in request.FILES.getlist('files'):
                     ff = f.open()
-                    file_hash = hash_from_file(ff)
+                    file_hash = get_file_hash(ff)
                     file = PostFile.objects.create(
                         post_id = post,
                         title = f.name,
@@ -65,12 +95,12 @@ class PostView(View):
                     ff.close()
                     savedFilePaths.append(file.file.url[1:])
 
-                for tag in data['tags'].split(','):
+                for tag in form.cleaned_data['tags'].split(','):
                     post.tags.add(tag.strip())
         except:
             remove_saved_files_and_empty_dirs(savedFilePaths)
-            return JsonResponse({"message":"글 생성에 실패했습니다. 확인 후 다시 시도해주세요."}, status=406)
-        return JsonResponse({"message":"글 생성에 성공했습니다."}, status=200)
+            return JsonResponse({"message":error_messages['fail_create_post']}, status=406)
+        return JsonResponse({"message":success_message}, status=200)
 
     def get(self, request):
         post = Post.objects.values()
@@ -83,31 +113,61 @@ class PostView(View):
 class PostDetailView(View):
     @method_decorator(login_required, name="dispatch")
     def post(self, request, post_id):
+        success_message = "%(before_post_title)s 글을 수정하는데 성공했습니다"
+        error_messages = {
+            'wrong_request' : "잘못된 요청입니다. 다시 시도해주세요.",
+            'not_permitted' : "해당 글 수정 권한이 없습니다. 작성자나 관리자 계정으로 로그인 후 다시 요청해주세요.",
+            'file_max_size_over' : f"첨부한 파일(들)의 총 용량이 글 하나당 저장 가능한 최대 용량({settings.MAX_FILE_UPLOAD_SIZE_TO_UNIT_NOTATION})을 넘어갑니다.",
+            'invalid_board_id' : "입력한 보드가 존재하지 않습니다. 확인 후 다시 시도해주세요.",
+            'fail_update_post' : "'%(before_post_title)s' 글을 수정하는데 실패했습니다. 확인 후 다시 시도해주세요."
+        }
+
         data = request.POST
 
         if data is None:
-            return JsonResponse({"message": "잘못된 요청입니다. 다시 시도해주세요."}, status=400)
+            return JsonResponse({"message":error_messages['wrong_request']}, status=400)
         
         post = get_object_or_404(Post, id=post_id)
 
         if post.author_id.id != request.user.id and not request.user.is_superuser:
-            return JsonResponse({"message":"해당 글 수정 권한이 없습니다. 작성자나 관리자 계정으로 로그인 후 다시 요청해주세요."}, status=401)
+            return JsonResponse({"message":error_messages['not_permitted']}, status=401)
 
-        html_text = markdown(data['md_content'])
-        plain_text = unmark(data['md_content'])
+        form = PostFormExceptFiles(data, request.FILES)
+        if not form.is_valid():
+            return JsonResponse({"message":form.errors}, status=400)
+        if not Board.objects.filter(id=form.cleaned_data['board_id']).exists():
+            return JsonResponse({"message":error_messages['invalid_board_id']}, status=404)
+
+        print(form.cleaned_data['background_image_url'])
+        print(type(form.cleaned_data['background_image_url']))
+
+        total_file_size = 0
+        for file in request.FILES.getlist('files'):
+            total_file_size += file.size
+            fv = FileValidator(allowed_extensions=settings.ALLOWED_FILE_EXTENTIONS)
+            try:
+                if total_file_size > settings.MAX_FILE_UPLOAD_SIZE:
+                    raise ValidationError(message=error_messages['file_max_size_over'])
+                fv(file)
+            except ValidationError as e:
+                return JsonResponse({"message": e.message}, status=400)
+
+        md_content = form.cleaned_data['md_content']
+        html_text = markdown(md_content)
+        plain_text = unmark(md_content)
 
         before_post_title = post.title
 
-        post.title = data['title']
+        post.title = form.cleaned_data['title']
         post.content = html_text
-        post.md_content = data['md_content']
+        post.md_content = md_content
         post.plain_content =  plain_text
         post.preview_content = plain_text[:128]
-        post.board_id = get_object_or_404(Board, id=data['board_id'])
+        post.board_id = get_object_or_404(Board, id=form.cleaned_data['board_id'])
 
         removeFilePaths = []
-        removeFilePaths.append(post.background_image_real_relative_path)        
-        post.background_image_url = settings.DEFAULT_IMAGE_RELATIVE_PATH if 'background_image_url' in data else request.FILES['background_image_url']
+        removeFilePaths.append(post.background_image_real_relative_path)
+        post.background_image_url = settings.DEFAULT_IMAGE_RELATIVE_PATH if form.cleaned_data['background_image_url'] is None else form.cleaned_data['background_image_url']
         
         post.save()
 
@@ -120,7 +180,7 @@ class PostDetailView(View):
                     isItSameFile = False
                     try:
                         ff = f.open()
-                        file_hash = hash_from_file(ff)
+                        file_hash = get_file_hash(ff)
                         for file in files:
                             if file.hash == file_hash:
                                 isItSameFile = True
@@ -137,7 +197,8 @@ class PostDetailView(View):
                         )
                         savedFilePaths.append(fileInstance.file.url[1:])
                     finally:
-                        ff.close()
+                        if not ff.closed:
+                            ff.close()
 
                 for file in fileList:
                     removeFilePaths.append(file.file.url[1:])
@@ -149,10 +210,14 @@ class PostDetailView(View):
                     post.tags.add(tag.strip())
         except:
             remove_saved_files_and_empty_dirs(savedFilePaths)
-            return JsonResponse({"message" : f"'{before_post_title}' 글을 수정하는데 실패했습니다. 확인 후 다시 시도해주세요."}, status=406)
-        return JsonResponse({"message":f"{before_post_title} 글을 수정했습니다"}, status=200)
+            return JsonResponse({"message" : error_messages['fail_update_post'] % {"before_post_title":before_post_title}}, status=406)
+        return JsonResponse({"message":success_message % {"before_post_title":before_post_title}}, status=200)
 
     def get(self, request, post_id):
+        error_messages = {
+            "data_load_fail" : "데이터를 불러오는데 실패했습니다. 다시 시도해주세요."
+        }
+
         post = get_object_or_404(Post, id=post_id)
         response_data = PostDetailSerializer(post).data
 
@@ -167,7 +232,7 @@ class PostDetailView(View):
 
                 tags = [x.name for x in post.tags.all()]
         except:
-            return JsonResponse({"message":"데이터를 불러오는데 실패했습니다. 다시 시도해주세요."}, status=406)
+            return JsonResponse({"message":error_messages['data_load_fail']}, status=406)
 
         response_data['tags'] = tags
         response_data['files'] = files
@@ -181,10 +246,16 @@ class PostDetailView(View):
 
     @method_decorator(login_required, name="dispatch")
     def delete(self, request, post_id):
+        success_message = "'%(post_title)s' 글이 정상적으로 삭제되었습니다"
+        error_messages = {
+            "not_permitted" : "해당 글 삭제 권한이 없습니다. 작성자나 관리자 계정으로 로그인 후 다시 시도해주세요.",
+            "delete_fail" : "'%(post_title)s' 글을 삭제하는데 실패했습니다. 다시 시도해주세요."
+        }
+        
         post = get_object_or_404(Post, id=post_id)
         
         if post.author_id.id != request.user.id and not request.user.is_superuser:
-            return JsonResponse({"message" : "해당 글 삭제 권한이 없습니다. 작성자나 관리자 계정으로 로그인 후 다시 시도해주세요."}, status=403)
+            return JsonResponse({"message" : error_messages['not_permitted']}, status=403)
 
         try:
             with transaction.atomic():
@@ -199,25 +270,33 @@ class PostDetailView(View):
                 post.tags.clear()
                 post.delete()
         except:
-            return JsonResponse({"message" : f"'{post.title}' 글을 삭제하는데 실패했습니다. 다시 시도해주세요."}, status=406)
-        return JsonResponse({"message" : f"'{post.title}' 글이 정상적으로 삭제되었습니다"}, status=200)
+            return JsonResponse({"message":error_messages['delete_fail'] % {"post_title":post.title}}, status=406)
+        return JsonResponse({"message":success_message % {"post_title":post.title}}, status=200)
 
 
 class PostFileDownloadView(View):
     @method_decorator(login_required, name="dispatch")
     def get(self, request, post_id, file_name):
+        error_messages = {
+            "not_permitted" : "파일 다운로드 권한이 없습니다. 인증된 회원 계정으로 로그인 후 다시 시도해주세요.",
+            "not_exist_file_in_post" : "해당 글에 등록된 파일이 없습니다. 확인 후 다시 시도해주세요.",
+            "not_exist_file_in_path" : "파일이 해당 경로에 존재하지 않습니다."
+        }
+
         if not request.user.is_active:
-            return JsonResponse({"message" : "파일 다운로드 권한이 없습니다. 인증된 회원 계정으로 로그인 후 다시 시도해주세요."}, status=403)
+            return JsonResponse({"message" : error_messages['not_permitted']}, status=403)
 
         postFiles = PostFile.objects.filter(post_id=post_id)
-        for fp in postFiles:
-            if fp.real_file_name == file_name:
-                filePath = fp.file.path
+        if not postFiles:
+            return JsonResponse({"message" : error_messages['not_exist_file_in_post']}, status=404)
+        for pf in postFiles:
+            if pf.real_file_name == file_name:
+                filePath = pf.file.path
                 if os.path.exists(filePath):
                     try:
                         with open(filePath, 'rb') as f:
                             response = HttpResponse(f.read(), content_type="application/force-download")
-                            response['Content-Disposition'] = f'inline; filename={fp.title}'
+                            response['Content-Disposition'] = f'inline; filename={pf.title}'
                             return response
                     except:
-                        return JsonResponse({"message" : "해당 파일이 존재하지 않습니다. 확인 후 다시 시도해주세요."}, status=404)
+                        return JsonResponse({"message" : error_messages['not_exist_file_in_path']}, status=404)
