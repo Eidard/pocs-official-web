@@ -19,11 +19,11 @@ class SearchView(View):
 
         p = re.compile('[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9-]+')
         m = p.match(keyword)
-        if m is None or m.group() is not keyword:
+        if m is None or m.group() != keyword:
             return JsonResponse({"message":"잘못된 검색어를 입력했습니다. 다시 입력해주세요"}, status=401)
 
-        query_keyword = '"' + keyword.replace('-', '" "') + '"'
-        query = "SELECT * FROM post WHERE match(post.title, post.plain_content) against('" + query_keyword + "');"
+        query_keyword = keyword.replace('-', '" "')
+        query = f'SELECT * FROM post WHERE match(post.title, post.plain_content) against("{query_keyword}");'
         searched_posts = Post.objects.raw(query)
         posts_data = []
         response_data = {}

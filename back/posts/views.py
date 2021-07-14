@@ -9,8 +9,7 @@ from django.utils.decorators import method_decorator
 from django.db import transaction
 from django.conf import settings
 
-from .markdown import *
-from .common import get_file_hash, remove_saved_files_and_empty_dirs
+from .common import get_file_hash, remove_saved_files_and_empty_dirs, unmarkdown, trans_markdown_to_html_and_bleach
 from .forms import PostFormExceptFiles
 from .validators import FileValidator
 
@@ -62,8 +61,8 @@ class PostView(View):
                 return JsonResponse({"message": e.message}, status=400)
 
         md_content = form.cleaned_data['md_content']
-        html_text = markdown(md_content)
-        plain_text = unmark(md_content)
+        html_text = trans_markdown_to_html_and_bleach(md_content)
+        plain_text = unmarkdown(md_content)
 
         background_image = settings.DEFAULT_IMAGE_RELATIVE_PATH if form.cleaned_data['background_image_url'] is None else form.cleaned_data['background_image_url']
 
@@ -153,8 +152,8 @@ class PostDetailView(View):
                 return JsonResponse({"message": e.message}, status=400)
 
         md_content = form.cleaned_data['md_content']
-        html_text = markdown(md_content)
-        plain_text = unmark(md_content)
+        html_text = trans_markdown_to_html_and_bleach(md_content)
+        plain_text = unmarkdown(md_content)
 
         before_post_title = post.title
 

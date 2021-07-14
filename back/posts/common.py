@@ -2,7 +2,9 @@ import datetime
 import os
 import uuid
 import hashlib
+import bleach
 
+from .markdown import *
 from django.conf import settings
 
 
@@ -44,3 +46,34 @@ def get_file_hash(fileInstance):
     else:
         ctx.update(fileInstance.read())
     return ctx.hexdigest()
+
+def unmarkdown(text):
+    return unmark(text)
+
+MARKDOWN_TAGS = (
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p',
+    'em', 'strong', 'u',
+    'ol', 'ul', 'li',
+    'a',
+    'img',
+    'pre', 'code',
+    'table', 'thead', 'tr', 'th', 'td', 'tbody',
+    'blockquote',
+    'br', 'hr',
+)
+
+MARKDOWN_ATTRIBUTES_PER_TAG = {
+    'img' : ['alt', 'src', 'title'],
+    'a' : ['href'],
+    'th' : ['align'],
+    'td' : ['align'],
+}
+
+def trans_markdown_to_html_and_bleach(text):
+    html_text = markdown(text, extensions=['tables'])
+    return bleach.clean(
+        html_text,
+        strip_comments=False,
+        tags=MARKDOWN_TAGS,
+        attributes=MARKDOWN_ATTRIBUTES_PER_TAG
+    )
