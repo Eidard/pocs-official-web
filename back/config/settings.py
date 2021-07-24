@@ -101,14 +101,17 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'OPTIONS' : {
-            'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-        'ENGINE': 'django.db.backends.mysql',
+        # 'OPTIONS' : {
+        #     'init_command' : "SET sql_mode='STRICT_TRANS_TABLES'",
+        # },
+        # 'ENGINE': 'django.db.backends.mysql',
+        'ENGINE': 'mysql.connector.django',
         'NAME': 'pocs',
-        'USER': 'admin',
+        # 'USER': 'admin',
+        'USER': 'pocs',
         'PASSWORD': 'pocs1234',
-        'HOST': 'pocs-dev-mysql.cavcoi84nbul.ap-northeast-2.rds.amazonaws.com',
+        # 'HOST': 'pocs-dev-mysql.cavcoi84nbul.ap-northeast-2.rds.amazonaws.com',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
