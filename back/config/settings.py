@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
+    # CORS
+    'corsheaders',
+
     # DRF
     'rest_framework',
     # 'rest_framework.authtoken',
@@ -69,7 +72,15 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:8080',
+    'http://127.0.0.1:8080'
+]
+
+CORS_ALLOW_CREDENTIALS = True
 
 TAGGIT_CASE_INSENSITIVE = True
 
@@ -106,9 +117,9 @@ DATABASES = {
         },
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pocs',
-        'USER': 'admin',
-        'PASSWORD': 'pocs1234',
-        'HOST': 'pocs-dev-mysql.cavcoi84nbul.ap-northeast-2.rds.amazonaws.com',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
