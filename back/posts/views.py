@@ -23,7 +23,7 @@ from board.models import Board
 from board.serializers import BoardCategorySerializer
 
 
-class PostView(View):
+class PostCreateView(View):
     @method_decorator(login_required, name="dispatch")
     def post(self, request):        
         success_message = "글 생성에 성공했습니다."
