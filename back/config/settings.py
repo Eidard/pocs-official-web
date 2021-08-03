@@ -201,6 +201,8 @@ ALLOWED_FILE_EXTENTIONS = (
 
 MAX_TAG_COUNT_IN_POST = 10
 
+MAX_BOARD_CATEGORY_LEVEL = 5
+
 # Session cookie
 # https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-SESSION_COOKIE_DOMAIN
 
