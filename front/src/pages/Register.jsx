@@ -97,7 +97,6 @@ const SubText = styled.p`
 `;
 
 export default function Register(props) {
-  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [name, setName] = useState('');
@@ -109,6 +108,7 @@ export default function Register(props) {
   const [gender, setGender] = useState('male');
   const [phone, setPhone] = useState('');
   const [joinedYear, setJoinedYear] = useState('');
+  const history = useHistory();
 
   const handleClickSubmit = () => {
     console.log(studentId);
