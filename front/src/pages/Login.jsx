@@ -1,9 +1,8 @@
 import React, { ReactElement, useState } from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import { Link, useHistory }              from 'react-router-dom';
+import styled                            from 'styled-components';
 
 import Backdrop from '../components/Backdrop';
-
 import { authenticate } from '../api/Api';
 
 const Wrapper = styled.main`
@@ -69,10 +68,11 @@ const SubText = styled.p`
   color: #999999;
 `;
 
-export default withRouter(function Login(props) {
+export default function Login(props) {
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const history = useHistory();
 
   const handleClickLogin = () => {
     (async () => {
@@ -80,7 +80,7 @@ export default withRouter(function Login(props) {
 
       try {
         await authenticate(username, password);
-        props.history.push('/');
+        history.push('/');
       } catch (response) {
         alert('잘못된 아이디 또는 패스워드입니다.');
         setLoading(false);
@@ -123,4 +123,4 @@ export default withRouter(function Login(props) {
       <Backdrop open={loading} />
     </>
   );
-});
+};

@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import {Link, withRouter}             from 'react-router-dom';
+import { Link }                       from 'react-router-dom';
 import styled                         from 'styled-components';
 
-import Backdrop                       from '../components/Backdrop';
-
-import { getPosts }                   from '../api/Api';
-
-import { formatDate }                 from '../utils/Format';
+import Backdrop from '../components/Backdrop';
+import { getPosts } from '../api/Api';
+import { formatDate } from '../utils/Format';
 
 const Wrapper = styled.main`
   margin:           0px;
@@ -176,6 +174,13 @@ const NavigationBarButton = (props) => {
 }
 
 const AccountButton = () => {
+  /*
+  if () {
+    return <Link to="/account-detail">
+      <NavigationBarImageItem src="/images/main/account.png"/>
+    </Link>
+  }*/
+
   return <Link to="/login">
     <NavigationBarImageItem src="/images/main/account.png"/>
   </Link>
@@ -214,7 +219,7 @@ const NoticeBar = (props) => {
   );
 }
 
-export default withRouter(function Main(props) {
+export default function Main(props) {
   const [posts, setPosts] = useState(null);
   useEffect(() => {
     (async () => {
@@ -261,4 +266,4 @@ export default withRouter(function Main(props) {
   ) : (
    <Backdrop open />
   );
-});
+};
