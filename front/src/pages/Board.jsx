@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import { Link }                       from 'react-router-dom';
+import styled                         from 'styled-components';
 
 import Backdrop from '../components/Backdrop';
-
 import { getPosts } from '../api/Api';
-
 import { formatDate } from '../utils/Format';
 
 const Wrapper = styled.main`
@@ -156,7 +154,7 @@ const ArticleRow = (props) => {
   );
 };
 
-export default withRouter(function Board(props) {
+export default function Board(props) {
   const [posts, setPosts] = useState(null);
 
   useEffect(() => {
@@ -202,4 +200,4 @@ export default withRouter(function Board(props) {
   ) : (
     <Backdrop open />
   );
-});
+};

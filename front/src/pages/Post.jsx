@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Link, withRouter } from 'react-router-dom';
-import styled from 'styled-components';
+import { Link, useParams }            from 'react-router-dom';
+import styled                         from 'styled-components';
 
 import Backdrop from '../components/Backdrop';
-
 import { getPost } from '../api/Api';
-
 import { formatDate } from '../utils/Format';
 
 const Wrapper = styled.main`
@@ -130,13 +128,14 @@ const SearchButton = () => {
   return <NavigationBarImageItem src="/images/main/search.png" />;
 };
 
-export default withRouter(function Post(props) {
+export default function Post(props) {
   const [post, setPost] = useState(null);
+  const { id } = useParams();
 
   useEffect(() => {
     (async () => {
       try {
-        setPost(await getPost(props.match.params.id));
+        setPost(await getPost(id));
       } catch {
         alert('문제가 발생했습니다. 관리자에게 문의해주세요.');
       }
@@ -168,4 +167,4 @@ export default withRouter(function Post(props) {
   ) : (
     <Backdrop open={!post} />
   );
-});
+};

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+
 import styled from 'styled-components';
-
 import Backdrop from '../components/Backdrop';
-
 import { requestRegister } from '../api/Api';
 
 const Wrapper = styled.main`
@@ -97,7 +96,8 @@ const SubText = styled.p`
   }
 `;
 
-export default withRouter(function Register(props) {
+export default function Register(props) {
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const [studentId, setStudentId] = useState('');
   const [name, setName] = useState('');
@@ -138,7 +138,7 @@ export default withRouter(function Register(props) {
           joinedYear
         );
 
-        props.history.push('/login');
+        history.push('/login');
       } catch {
         alert('문제가 발생했습니다. 관리자에게 문의해주세요.');
         setLoading(false);
@@ -256,4 +256,4 @@ export default withRouter(function Register(props) {
       <Backdrop open={loading} />
     </>
   );
-});
+};
