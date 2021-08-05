@@ -21,6 +21,7 @@ export async function requestRegister(
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: "include",
     body: JSON.stringify({
       studentId,
       name,
@@ -43,6 +44,7 @@ export async function authenticate(username, password) {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: "include",
     body: JSON.stringify({
       username,
       password,
@@ -55,6 +57,7 @@ export async function authenticate(username, password) {
 export async function getPosts() {
   const response = await fetch(generateUrl('/posts'), {
     method: 'get',
+    credentials: "include",
   });
 
   if (!response.ok) throw response;
