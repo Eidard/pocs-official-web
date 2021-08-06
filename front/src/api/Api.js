@@ -23,15 +23,15 @@ export async function requestRegister(
     },
     credentials: "include",
     body: JSON.stringify({
-      studentId,
-      name,
-      email,
-      username,
-      password,
-      birth,
-      gender,
-      phone,
-      joinedYear,
+      student_id: studentId,
+      name: name,
+      email: email,
+      username: username,
+      password: password,
+      birth: birth,
+      gender: gender,
+      phone: phone,
+      generation: joinedYear,
     }),
   });
 
@@ -46,8 +46,8 @@ export async function authenticate(username, password) {
     },
     credentials: "include",
     body: JSON.stringify({
-      username,
-      password,
+      username: username,
+      password: password,
     }),
   });
 
