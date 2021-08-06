@@ -23,7 +23,7 @@ export async function requestRegister(
     },
     credentials: "include",
     body: JSON.stringify({
-      studentId,
+      student_id: studentId,
       name,
       email,
       username,
@@ -31,7 +31,7 @@ export async function requestRegister(
       birth,
       gender,
       phone,
-      joinedYear,
+      generation: joinedYear,
     }),
   });
 

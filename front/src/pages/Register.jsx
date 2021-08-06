@@ -146,6 +146,34 @@ export default function Register(props) {
     })();
   };
 
+  function autoHypenPhone(str){
+    str = str.replace(/[^0-9]/g, '');
+    var tmp = '';
+    if( str.length < 4){
+        return str;
+    }else if(str.length < 7){
+        tmp += str.substr(0, 3);
+        tmp += '-';
+        tmp += str.substr(3);
+        return tmp;
+    }else if(str.length < 11){
+        tmp += str.substr(0, 3);
+        tmp += '-';
+        tmp += str.substr(3, 3);
+        tmp += '-';
+        tmp += str.substr(6);
+        return tmp;
+    }else{              
+        tmp += str.substr(0, 3);
+        tmp += '-';
+        tmp += str.substr(3, 4);
+        tmp += '-';
+        tmp += str.substr(7);
+        return tmp;
+    }
+    return str;
+  }
+
   return (
     <>
       <Wrapper>
@@ -212,7 +240,7 @@ export default function Register(props) {
             <Label htmlFor="birth">생년월일</Label>
             <Input
               id="birth"
-              type="text"
+              type="date"
               value={birth}
               onChange={(event) => setBirth(event.currentTarget.value)}
             />
@@ -231,15 +259,17 @@ export default function Register(props) {
           <Row>
             <Label htmlFor="phone">전화번호</Label>
             <Input
+              placeholder="010-1234-5678"
               id="phone"
               type="text"
               value={phone}
-              onChange={(event) => setPhone(event.currentTarget.value)}
+              onChange={(event) => setPhone(autoHypenPhone(event.currentTarget.value))}
             />
           </Row>
           <Row>
             <Label htmlFor="joinedYear">동아리 가입 년도</Label>
             <Input
+              placeholder="2010(4자리)"
               id="joinedYear"
               type="text"
               value={joinedYear}
