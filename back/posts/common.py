@@ -77,3 +77,6 @@ def trans_markdown_to_html_and_bleach(text):
         tags=MARKDOWN_TAGS,
         attributes=MARKDOWN_ATTRIBUTES_PER_TAG
     )
+
+def bleach_clean(text):
+    return bleach.clean(text)
